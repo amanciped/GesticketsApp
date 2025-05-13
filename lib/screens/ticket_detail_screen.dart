@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/ticket.dart';
 import 'edit_ticket_screen.dart';
 import '../services/api_service.dart';
+import 'assign_ticket_screen.dart';
 
 class TicketDetailScreen extends StatelessWidget {
   final Ticket ticket;
@@ -47,6 +48,18 @@ class TicketDetailScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 child: Text('Eliminar Solicitud'),
               ),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => AssignTicketScreen(ticket: ticket),
+                  ),
+                );
+              },
+              child: const Text('Asignar Ticket'),
+            ),
 
           ],
         ),

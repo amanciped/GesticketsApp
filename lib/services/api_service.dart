@@ -48,4 +48,14 @@ class ApiService {
     return response.statusCode == 200 || response.statusCode == 204;
   }
 
+  static Future<bool> asignarTicket(String titulo, String agente) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/$titulo/asignar'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'asignadoA': agente}),
+    );
+
+    return response.statusCode == 200;
+  }
+
 }
