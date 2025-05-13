@@ -82,4 +82,17 @@ class ApiService {
     return response.statusCode == 201 || response.statusCode == 200;
   }
 
+  static Future<bool> resolverTicket(String titulo) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/$titulo/resolver'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'estado': 'resuelto',
+        'fechaResolucion': DateTime.now().toIso8601String(),
+      }),
+    );
+
+    return response.statusCode == 200;
+  }
+
 }

@@ -28,6 +28,9 @@ class TicketDetailScreen extends StatelessWidget {
             const SizedBox(height: 20),
             Text('Categoría', style: Theme.of(context).textTheme.titleLarge),
             Text(ticket.categoria),
+            const SizedBox(height: 20),
+            Text('Estado', style: Theme.of(context).textTheme.titleLarge),
+            Text(ticket.estado.toUpperCase()),
             const SizedBox(height: 40),
 
             ElevatedButton(
@@ -67,6 +70,45 @@ class TicketDetailScreen extends StatelessWidget {
             Text('Comentarios', style: Theme.of(context).textTheme.titleLarge),
             ComentarioList(tituloTicket: ticket.titulo),
             ComentarioForm(tituloTicket: ticket.titulo),
+
+            if (ticket.estado != 'resuelto' && ticket.estado != 'cerrado')
+              ElevatedButton(
+                onPressed: () async {
+                  final confirmacion = await showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: const Text('¿Marcar como resuelto?'),
+                      content: const Text('Esto indicará que la solicitud fue atendida.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text('Cancelar'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text('Confirmar'),
+                        ),
+                      ],
+                    ),
+                  );
+
+                  if (confirmacion == true) {
+                    final exito = await ApiService.resolverTicket(ticket.titulo);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(exito
+                            ? 'Ticket marcado como resuelto'
+                            : 'Error al actualizar el ticket'),
+                      ),
+                    );
+                    if (exito && context.mounted) {
+                      Navigator.pop(context); // Vuelve atrás para refrescar
+                    }
+                  }
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                child: const Text('Marcar como Resuelto'),
+              ),
 
           ],
         ),
