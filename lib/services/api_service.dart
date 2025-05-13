@@ -28,4 +28,14 @@ class ApiService {
       throw Exception('Error al obtener los tickets');
     }
   }
+
+  static Future<bool> updateTicket(Ticket ticket) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/${ticket.titulo}'), // O usa el ID si lo tienes
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(ticket.toJson()),
+    );
+
+    return response.statusCode == 200;
+  }
 }

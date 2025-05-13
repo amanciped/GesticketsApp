@@ -21,6 +21,7 @@ class _TicketFormState extends State<TicketForm> {
         titulo: _tituloController.text,
         descripcion: _descripcionController.text,
         categoria: _categoria,
+        estado: 'abierto',
       );
 
       final success = await ApiService.crearTicket(ticket);

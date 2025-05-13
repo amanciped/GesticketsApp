@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/ticket.dart';
+import 'edit_ticket_screen.dart';
 
 class TicketDetailScreen extends StatelessWidget {
   final Ticket ticket;
@@ -23,6 +24,18 @@ class TicketDetailScreen extends StatelessWidget {
             const SizedBox(height: 20),
             Text('Categoría', style: Theme.of(context).textTheme.titleLarge),
             Text(ticket.categoria),
+            const SizedBox(height: 40),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => EditTicketScreen(ticket: ticket),
+                  ),
+                );
+              },
+              child: Text('Editar Solicitud'),
+            ),
           ],
         ),
       ),
