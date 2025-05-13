@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/ticket.dart';
+import '../widgets/comentario_form.dart';
+import '../widgets/comentario_list.dart';
 import 'edit_ticket_screen.dart';
 import '../services/api_service.dart';
 import 'assign_ticket_screen.dart';
@@ -60,6 +62,11 @@ class TicketDetailScreen extends StatelessWidget {
               },
               child: const Text('Asignar Ticket'),
             ),
+
+            const SizedBox(height: 20),
+            Text('Comentarios', style: Theme.of(context).textTheme.titleLarge),
+            ComentarioList(tituloTicket: ticket.titulo),
+            ComentarioForm(tituloTicket: ticket.titulo),
 
           ],
         ),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/ticket.dart';
+import '../models/comment.dart';
 
 class ApiService {
   //static const String baseUrl = 'http://127.0.0.1:8081/api/tickets'; // ajusta según tu backend
@@ -56,6 +57,29 @@ class ApiService {
     );
 
     return response.statusCode == 200;
+  }
+
+  static Future<List<Comment>> getComentarios(String tituloTicket) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/$tituloTicket/comentarios'),
+    );
+
+    if (response.statusCode == 200) {
+      final List jsonData = jsonDecode(response.body);
+      return jsonData.map((c) => Comment.fromJson(c)).toList();
+    } else {
+      throw Exception('Error al cargar comentarios');
+    }
+  }
+
+  static Future<bool> agregarComentario(String tituloTicket, Comment comentario) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/$tituloTicket/comentarios'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(comentario.toJson()),
+    );
+
+    return response.statusCode == 201 || response.statusCode == 200;
   }
 
 }
