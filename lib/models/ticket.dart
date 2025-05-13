@@ -1,12 +1,19 @@
 class Ticket {
-  final String title;
-  final String description;
-  final String category;
-  final DateTime createdAt;
+  final String titulo;
+  final String descripcion;
+  final String categoria;
 
   Ticket({
-    required this.title,
-    required this.description,
-    required this.category,
-  }) : createdAt = DateTime.now();
+    required this.titulo,
+    required this.descripcion,
+    required this.categoria,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'titulo': titulo,
+      'descripcion': descripcion,
+      'categoria': categoria,
+    };
+  }
 }
