@@ -38,4 +38,14 @@ class ApiService {
 
     return response.statusCode == 200;
   }
+
+  static Future<bool> deleteTicket(String titulo) async {
+    final response = await http.delete(
+      Uri.parse('$baseUrl/$titulo'), // O usa ID si tu backend trabaja con ID
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    return response.statusCode == 200 || response.statusCode == 204;
+  }
+
 }
