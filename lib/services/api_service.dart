@@ -95,4 +95,15 @@ class ApiService {
     return response.statusCode == 200;
   }
 
+  static Future<List<Ticket>> getTicketsPorEstado(String estado) async {
+    final response = await http.get(Uri.parse('$baseUrl?estado=$estado'));
+
+    if (response.statusCode == 200) {
+      final List jsonData = jsonDecode(response.body);
+      return jsonData.map((e) => Ticket.fromJson(e)).toList();
+    } else {
+      throw Exception('Error al obtener tickets');
+    }
+  }
+  
 }
