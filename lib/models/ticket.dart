@@ -1,12 +1,35 @@
 class Ticket {
-  final String title;
-  final String description;
-  final String category;
-  final DateTime createdAt;
+  final String titulo;
+  final String descripcion;
+  final String categoria;
+  final String estado;
+  final String? asignadoA;
 
   Ticket({
-    required this.title,
-    required this.description,
-    required this.category,
-  }) : createdAt = DateTime.now();
+    required this.titulo,
+    required this.descripcion,
+    required this.categoria,
+    required this.estado,
+    this.asignadoA,
+  });
+
+  factory Ticket.fromJson(Map<String, dynamic> json) {
+    return Ticket(
+      titulo: json['titulo'],
+      descripcion: json['descripcion'],
+      categoria: json['categoria'].toString().toUpperCase(), // normaliza a mayúsculas
+      estado: json['estado'].toString().toUpperCase(),
+      asignadoA: json['asignadoA'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'titulo': titulo,
+      'descripcion': descripcion,
+      'categoria': categoria.toUpperCase(),
+      'estado': estado.toUpperCase(),
+      'asignadoA': asignadoA,
+    };
+  }
 }
