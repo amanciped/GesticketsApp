@@ -1,16 +1,40 @@
-# gestickets
 
-A new Flutter project.
+# GesTickets
 
-## Getting Started
+**GesTickets** es una aplicación de gestión de tickets de TI desarrollada como proyecto académico para la asignatura *Arquitectura de Sistemas 2*. Permite a usuarios y agentes gestionar solicitudes técnicas de forma eficiente mediante una plataforma web y móvil.
 
-This project is a starting point for a Flutter application.
+## 🔗 Repositorios
 
-A few resources to get you started if this is your first Flutter project:
+- 📦 **Frontend móvil (Flutter)**: [amanciped/GesticketsApp](https://github.com/amanciped/GesticketsApp)
+- 🔧 **Backend (Spring Boot)**: [Felipedv1307/GesTickets](https://github.com/Felipedv1307/GesTickets)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 📚 Wiki del Proyecto
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Consulta toda la documentación del proyecto, incluyendo el enunciado, modelo conceptual, historias de usuario, backlog, dailys y más:
+
+👉 [Wiki oficial en GitHub](https://github.com/amanciped/GesTickets/wiki)
+
+## 🚀 Tecnologías utilizadas
+
+- Backend: **Java Spring Boot**
+- Frontend móvil: **Flutter + Dart**
+- Base de datos: **PostgreSQL**
+- Infraestructura: **Render**, **Amazon RDS**, **S3**, **Lambda**
+
+## 📂 Funcionalidades principales
+
+- Registro e inicio de sesión de usuarios
+- Creación, edición y eliminación de tickets
+- Asignación automática/manual de solicitudes
+- Comentarios internos en cada solicitud
+- Resolución y seguimiento de tickets
+- Consulta histórica por rol y filtros avanzados
+
+## 👥 Desarrolladores
+
+- **Alonso Mancipe** – Desarrollo de frontend móvil y lógica de presentación
+- **David Madiedo** – Desarrollo de backend, controladores y pruebas de API
+
+## 📄 Licencia
+
+Proyecto académico sin fines de lucro. Uso educativo.
