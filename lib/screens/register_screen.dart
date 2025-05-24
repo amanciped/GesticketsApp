@@ -11,9 +11,12 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
+  final _nombreCompletoController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _nacionalidadController = TextEditingController();
+  String _rolSeleccionado = 'USUARIO';
+
   bool _isLoading = false;
 
   void _register() async {
@@ -22,9 +25,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     setState(() => _isLoading = true);
 
     final success = await AuthService.register(
-      _nameController.text,
-      _emailController.text,
-      _passwordController.text,
+      nombreCompleto: _nombreCompletoController.text,
+      username: _usernameController.text,
+      password: _passwordController.text,
+      nacionalidad: _nacionalidadController.text,
+      rol: _rolSeleccionado,
     );
 
     setState(() => _isLoading = false);
@@ -52,25 +57,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: Column(
+          child: ListView(
             children: [
               TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Nombre'),
+                controller: _nombreCompletoController,
+                decoration: const InputDecoration(labelText: 'Nombre completo'),
                 validator: (value) =>
                 value!.isEmpty ? 'Campo obligatorio' : null,
               ),
               TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Correo'),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value!.isEmpty) return 'Campo obligatorio';
-                  final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-                  return emailRegex.hasMatch(value)
-                      ? null
-                      : 'Correo inválido';
+                controller: _usernameController,
+                decoration: const InputDecoration(labelText: 'Nombre de usuario'),
+                validator: (value) =>
+                value!.isEmpty ? 'Campo obligatorio' : null,
+              ),
+              TextFormField(
+                controller: _nacionalidadController,
+                decoration: const InputDecoration(labelText: 'Nacionalidad'),
+                validator: (value) =>
+                value!.isEmpty ? 'Campo obligatorio' : null,
+              ),
+              DropdownButtonFormField<String>(
+                value: _rolSeleccionado,
+                items: ['USUARIO', 'GESTOR'].map((rol) {
+                  return DropdownMenuItem(
+                    value: rol,
+                    child: Text(rol),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  if (value != null) setState(() => _rolSeleccionado = value);
                 },
+                decoration: const InputDecoration(labelText: 'Rol'),
               ),
               TextFormField(
                 controller: _passwordController,
@@ -84,7 +102,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 20),
               _isLoading
-                  ? const CircularProgressIndicator()
+                  ? const Center(child: CircularProgressIndicator())
                   : ElevatedButton(
                 onPressed: _register,
                 child: const Text('Registrarse'),

@@ -17,8 +17,8 @@ class Ticket {
     return Ticket(
       titulo: json['titulo'],
       descripcion: json['descripcion'],
-      categoria: json['categoria'],
-      estado: json['estado'] ?? 'abierto',
+      categoria: json['categoria'].toString().toUpperCase(), // normaliza a mayúsculas
+      estado: json['estado'].toString().toUpperCase(),
       asignadoA: json['asignadoA'],
     );
   }
@@ -27,8 +27,8 @@ class Ticket {
     return {
       'titulo': titulo,
       'descripcion': descripcion,
-      'categoria': categoria,
-      'estado': estado,
+      'categoria': categoria.toUpperCase(),
+      'estado': estado.toUpperCase(),
       'asignadoA': asignadoA,
     };
   }

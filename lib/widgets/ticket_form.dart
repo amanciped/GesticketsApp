@@ -13,15 +13,21 @@ class _TicketFormState extends State<TicketForm> {
   final _formKey = GlobalKey<FormState>();
   final _tituloController = TextEditingController();
   final _descripcionController = TextEditingController();
-  String _categoria = 'Software';
+  String _categoria = 'SOFTWARE'; // Valor técnico por defecto (enviado al backend)
+
+  // Lista de categorías: valor visible (label) + valor real (value)
+  final List<Map<String, String>> categorias = [
+    {'label': 'Software', 'value': 'SOFTWARE'},
+    {'label': 'Hardware', 'value': 'HARDWARE'},
+  ];
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       final ticket = Ticket(
         titulo: _tituloController.text,
         descripcion: _descripcionController.text,
-        categoria: _categoria,
-        estado: 'abierto',
+        categoria: _categoria, // ya está en el formato correcto
+        estado: 'ABIERTO',     // también debe ir en mayúsculas
       );
 
       final success = await ApiService.crearTicket(ticket);
@@ -52,16 +58,19 @@ class _TicketFormState extends State<TicketForm> {
           ),
           DropdownButtonFormField<String>(
             value: _categoria,
-            items: ['Software', 'Hardware']
-                .map((cat) => DropdownMenuItem(value: cat, child: Text(cat)))
+            items: categorias
+                .map((cat) => DropdownMenuItem(
+              value: cat['value'],
+              child: Text(cat['label']!),
+            ))
                 .toList(),
             onChanged: (value) => setState(() => _categoria = value!),
             decoration: InputDecoration(labelText: 'Categoría'),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           ElevatedButton(
             onPressed: _submitForm,
-            child: Text('Crear Ticket'),
+            child: const Text('Crear Ticket'),
           ),
         ],
       ),

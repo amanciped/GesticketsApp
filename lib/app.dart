@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'screens/ticket_list_screen.dart';
 import 'screens/login_screen.dart';
 
 class MyApp extends StatelessWidget {
@@ -11,7 +10,6 @@ class MyApp extends StatelessWidget {
       title: 'GesTickets',
       theme: ThemeData(primarySwatch: Colors.blue),
       //home: const CreateTicketScreen(),
-      //home: const TicketListScreen(),
       home: const LoginScreen(),
     );
   }
