@@ -6,7 +6,7 @@
 ## 🔗 Repositorios
 
 - 📦 **Frontend móvil (Flutter)**: [amanciped/GesticketsApp](https://github.com/amanciped/GesticketsApp)
-- 🔧 **Backend (Spring Boot)**: [Felipedv1307/GesTickets](https://github.com/Felipedv1307/GesTickets)
+- 🔧 **Backend (Spring Boot)**: [amanciped/GesTickets](https://github.com/amanciped/GesTickets)
 
 ## 📚 Wiki del Proyecto
 
