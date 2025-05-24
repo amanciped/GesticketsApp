@@ -19,7 +19,7 @@ Consulta toda la documentación del proyecto, incluyendo el enunciado, modelo co
 - Backend: **Java Spring Boot**
 - Frontend móvil: **Flutter + Dart**
 - Base de datos: **PostgreSQL**
-- Infraestructura: **Render**, **Amazon RDS**, **S3**, **Lambda**
+- Infraestructura: **Render**
 
 ## 📂 Funcionalidades principales
 
