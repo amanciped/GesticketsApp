@@ -3,6 +3,7 @@ import 'create_ticket_screen.dart';
 import 'ticket_list_screen.dart';
 import '../services/auth_service.dart';
 import 'login_screen.dart';
+const Color naranja = Color(0xFFFF6F00);
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -10,101 +11,173 @@ class WelcomeScreen extends StatelessWidget {
   void _confirmLogout(BuildContext context) {
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Cerrar sesión'),
-        content: const Text('¿Estás seguro de que deseas cerrar sesión?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancelar'),
+      builder: (ctx) =>
+          AlertDialog(
+            backgroundColor: const Color(0xFF2C2C2C),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16)),
+            title: const Text(
+              'Cerrar sesión',
+              style: TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            content: const Text(
+              '¿Estás segur@ de que deseas cerrar sesión?',
+              style: TextStyle(color: Colors.white70),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: const Text(
+                    'Cancelar', style: TextStyle(color: Colors.orange)),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                  AuthService.logout();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Sesión cerrada')),
+                  );
+                  Future.delayed(const Duration(milliseconds: 500), () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                          (route) => false,
+                    );
+                  });
+                },
+                child: const Text(
+                    'Cerrar sesión', style: TextStyle(color: Colors.redAccent)),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(ctx).pop();
-              AuthService.logout();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Sesión cerrada')),
-              );
-              Future.delayed(const Duration(milliseconds: 500), () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (_) => const LoginScreen()),
-                      (route) => false,
-                );
-              });
-            },
-            child: const Text('Cerrar sesión'),
-          ),
-        ],
-      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final username = AuthService.token ?? 'Usuario';
-    final rol = AuthService.rol?.toLowerCase().replaceAll('_', ' ').replaceFirstMapped(
+    final rol = AuthService.rol
+        ?.toLowerCase()
+        .replaceAll('_', ' ')
+        .replaceFirstMapped(
       RegExp(r'^\w'),
           (m) => m.group(0)!.toUpperCase(),
     ) ?? 'Rol';
 
     return Scaffold(
+      backgroundColor: const Color(0xFF1E1E1E), // fondo más limpio
       appBar: AppBar(
-        title: const Text('Bienvenido a GesTickets'),
+        backgroundColor: Colors.black,
+        elevation: 4,
+        title: const Text(
+          'Bienvenid@ a Gestickets',
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () => _confirmLogout(context),
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout, color: Colors.white),
             tooltip: 'Cerrar sesión',
+            onPressed: () => _confirmLogout(context),
           ),
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '¡Bienvenido, $username!',
-              style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Rol: $rol',
-              style: const TextStyle(fontSize: 18),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 40),
-            ElevatedButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const CreateTicketScreen()),
-                );
-              },
-              icon: const Icon(Icons.add),
-              label: const Text('Crear Ticket'),
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size.fromHeight(50),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                'assets/images/what-is-it-incident-management.png',
+                height: 180,
               ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const TicketListScreen()),
-                );
-              },
-              icon: const Icon(Icons.list),
-              label: const Text('Ver mis Tickets'),
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size.fromHeight(50),
+              const SizedBox(height: 20),
+              Text(
+                '¡Saludos! $username',
+                style: const TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
               ),
+              const SizedBox(height: 10),
+              Text(
+                'Rol: $rol',
+                style: const TextStyle(fontSize: 18, color: Colors.white70),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 40),
+              _buildStyledButton(
+                context,
+                label: 'Crear Ticket',
+                icon: Icons.add,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const CreateTicketScreen()),
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              _buildStyledButton(
+                context,
+                label: 'Ver mis Tickets',
+                icon: Icons.list,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const TicketListScreen()),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStyledButton(BuildContext context,
+      {required String label, required IconData icon, required VoidCallback onTap}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: naranja,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.5),
+            offset: const Offset(0, 6),
+            blurRadius: 12,
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, color: Colors.white),
+                const SizedBox(width: 12),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
