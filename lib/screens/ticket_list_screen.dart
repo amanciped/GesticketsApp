@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -68,19 +69,21 @@ class _TicketListScreenState extends State<TicketListScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Confirmar eliminación'),
-        content: const Text('¿Estás seguro de que deseas eliminar este ticket?'),
+        backgroundColor: const Color(0xFF2C2C2C),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Confirmar eliminación', style: TextStyle(color: Colors.white)),
+        content: const Text('¿Estás seguro de que deseas eliminar este ticket?', style: TextStyle(color: Colors.white70)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancelar'),
+            child: const Text('Cancelar', style: TextStyle(color: Colors.orange)),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(ctx).pop();
               _eliminarTicket(id);
             },
-            child: const Text('Eliminar', style: TextStyle(color: Colors.red)),
+            child: const Text('Eliminar', style: TextStyle(color: Colors.redAccent)),
           ),
         ],
       ),
@@ -102,7 +105,7 @@ class _TicketListScreenState extends State<TicketListScreen> {
     );
 
     if (actualizado == true) {
-      _fetchTickets(); // Recargar después de editar
+      _fetchTickets();
     }
   }
 
@@ -118,35 +121,56 @@ class _TicketListScreenState extends State<TicketListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Mis Tickets')),
+      backgroundColor: const Color(0xFF1E1E1E),
+      appBar: AppBar(
+        title: const Text('Mis Tickets'),
+        backgroundColor: Colors.black,
+        elevation: 4,
+        centerTitle: true,
+      ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(color: Colors.orange))
           : ListView.builder(
         itemCount: _tickets.length,
         itemBuilder: (context, index) {
           final ticket = _tickets[index];
-          return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.black54,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  offset: const Offset(0, 4),
+                  blurRadius: 8,
+                ),
+              ],
+            ),
             child: ListTile(
-              onTap: () => _verDetalle(ticket), // ✅ Al hacer click
-              title: Text(ticket['titulo']),
+              onTap: () => _verDetalle(ticket),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              title: Text(
+                ticket['titulo'],
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(ticket['descripcion']),
+                  Text(ticket['descripcion'], style: const TextStyle(color: Colors.white70)),
                   const SizedBox(height: 5),
-                  Text("Estado: ${ticket['estado']}"),
+                  Text("Estado: ${ticket['estado']}", style: const TextStyle(color: Colors.white54)),
                 ],
               ),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.blue),
+                    icon: const Icon(Icons.edit, color: Colors.orangeAccent),
                     onPressed: () => _editarTicket(ticket),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
+                    icon: const Icon(Icons.delete, color: Colors.redAccent),
                     onPressed: () => _confirmarEliminacion(ticket['id']),
                   ),
                 ],

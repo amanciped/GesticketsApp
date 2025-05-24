@@ -4,6 +4,8 @@ import 'dart:convert';
 
 import '../services/auth_service.dart';
 
+const Color naranja = Color(0xFFFF6F00);
+
 class EditTicketScreen extends StatefulWidget {
   final int ticketId;
   final String titulo;
@@ -49,9 +51,7 @@ class _EditTicketScreenState extends State<EditTicketScreen> {
       return;
     }
 
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+    if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
 
@@ -82,54 +82,89 @@ class _EditTicketScreenState extends State<EditTicketScreen> {
     }
   }
 
+  InputDecoration _inputDecoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: const TextStyle(color: Colors.white70),
+      filled: true,
+      fillColor: Colors.black12,
+      enabledBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.black54),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: naranja),
+        borderRadius: BorderRadius.circular(16),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Editar Ticket')),
+      backgroundColor: const Color(0xFF1E1E1E),
+      appBar: AppBar(
+        title: const Text('Editar Ticket'),
+        backgroundColor: Colors.black,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Form(
           key: _formKey,
-          child: Column(
+          child: ListView(
             children: [
               TextFormField(
                 controller: _tituloController,
-                decoration: const InputDecoration(labelText: 'Título'),
+                style: const TextStyle(color: Colors.white),
+                decoration: _inputDecoration('Título'),
                 validator: (value) =>
                 value == null || value.isEmpty ? 'Campo obligatorio' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _descripcionController,
-                decoration: const InputDecoration(labelText: 'Descripción'),
                 maxLines: 4,
+                style: const TextStyle(color: Colors.white),
+                decoration: _inputDecoration('Descripción'),
                 validator: (value) =>
                 value == null || value.isEmpty ? 'Campo obligatorio' : null,
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
+                dropdownColor: Colors.black87,
+                style: const TextStyle(color: Colors.white),
                 value: _categoriaSeleccionada,
-                hint: const Text('Selecciona una categoría'),
+                decoration: _inputDecoration('Categoría'),
                 items: _categorias.map((String categoria) {
                   return DropdownMenuItem<String>(
                     value: categoria,
                     child: Text(categoria),
                   );
                 }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _categoriaSeleccionada = value;
-                  });
-                },
+                onChanged: (value) => setState(() => _categoriaSeleccionada = value),
                 validator: (value) =>
                 value == null || value.isEmpty ? 'Campo obligatorio' : null,
               ),
               const SizedBox(height: 24),
               _isLoading
-                  ? const CircularProgressIndicator()
-                  : ElevatedButton(
-                onPressed: _actualizarTicket,
-                child: const Text('Actualizar Ticket'),
+                  ? const Center(child: CircularProgressIndicator(color: naranja))
+                  : SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _actualizarTicket,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: naranja,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  child: const Text(
+                    'Actualizar Ticket',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
               ),
             ],
           ),

@@ -1,9 +1,10 @@
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'ticket_detail_gestor_screen.dart';
-import 'ticket_edit_gestor_screen.dart'; // Asegúrate de tener esta pantalla creada
+import 'ticket_edit_gestor_screen.dart';
 import '../services/auth_service.dart';
 
 class TicketListGestorScreen extends StatefulWidget {
@@ -54,7 +55,7 @@ class _TicketListGestorScreenState extends State<TicketListGestorScreen> {
       context,
       MaterialPageRoute(builder: (_) => TicketDetailGestorScreen(ticket: ticket)),
     );
-    _fetchTickets(); // recargar al volver
+    _fetchTickets();
   }
 
   void _editarTicket(dynamic ticket) async {
@@ -62,12 +63,14 @@ class _TicketListGestorScreenState extends State<TicketListGestorScreen> {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Ticket cerrado'),
-          content: const Text('Este ticket ya está cerrado y no se puede editar.'),
+          backgroundColor: const Color(0xFF2C2C2C),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Text('Ticket cerrado', style: TextStyle(color: Colors.white)),
+          content: const Text('Este ticket ya está cerrado y no se puede editar.', style: TextStyle(color: Colors.white70)),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(),
-              child: const Text('Aceptar'),
+              child: const Text('Aceptar', style: TextStyle(color: Colors.orange)),
             ),
           ],
         ),
@@ -85,17 +88,19 @@ class _TicketListGestorScreenState extends State<TicketListGestorScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('¿Eliminar ticket?'),
-        content: const Text('¿Estás seguro que deseas borrar el ticket sin finalizarlo?'),
+        backgroundColor: const Color(0xFF2C2C2C),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('¿Eliminar ticket?', style: TextStyle(color: Colors.white)),
+        content: const Text('¿Estás seguro que deseas borrar el ticket sin finalizarlo?', style: TextStyle(color: Colors.white70)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancelar'),
+            child: const Text('Cancelar', style: TextStyle(color: Colors.orange)),
           ),
           ElevatedButton.icon(
             icon: const Icon(Icons.delete),
             label: const Text('Eliminar'),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
             onPressed: () async {
               Navigator.of(ctx).pop();
               await _eliminarTicket(ticket['id']);
@@ -133,11 +138,22 @@ class _TicketListGestorScreenState extends State<TicketListGestorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Mis Tickets Asignados')),
+      backgroundColor: const Color(0xFF1E1E1E),
+      appBar: AppBar(
+        title: const Text('Mis Tickets Asignados'),
+        backgroundColor: Colors.black,
+        elevation: 4,
+        centerTitle: true,
+      ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(color: Colors.orange))
           : _tickets.isEmpty
-          ? const Center(child: Text('No tienes tickets asignados.'))
+          ? const Center(
+        child: Text(
+          'No tienes tickets asignados.',
+          style: TextStyle(color: Colors.white70),
+        ),
+      )
           : ListView.builder(
         itemCount: _tickets.length,
         itemBuilder: (context, index) {
@@ -163,35 +179,44 @@ class _TicketListGestorScreenState extends State<TicketListGestorScreen> {
           }
 
           final estaCerrado = ticket['estado'] == 'CERRADO';
-          return Card(
-            color: estaCerrado ? Colors.grey[200] : null, // Fondo gris si está cerrado
-            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: estaCerrado ? Colors.grey[700] : Colors.black54,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  offset: const Offset(0, 4),
+                  blurRadius: 8,
+                ),
+              ],
+            ),
             child: ListTile(
               onTap: () => _verDetalle(ticket),
               leading: Icon(icono, color: color),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               title: Text(
                 ticket['titulo'],
                 style: TextStyle(
-                  color: estaCerrado ? Colors.black54 : Colors.black,
+                  color: Colors.white,
                   fontWeight: estaCerrado ? FontWeight.normal : FontWeight.bold,
                 ),
               ),
               subtitle: Text(
                 ticket['descripcion'],
-                style: TextStyle(
-                  color: estaCerrado ? Colors.black45 : Colors.black87,
-                ),
+                style: const TextStyle(color: Colors.white70),
               ),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.blue),
+                    icon: const Icon(Icons.edit, color: Colors.orangeAccent),
                     tooltip: 'Editar',
                     onPressed: () => _editarTicket(ticket),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
+                    icon: const Icon(Icons.delete, color: Colors.redAccent),
                     tooltip: 'Eliminar',
                     onPressed: () => _mostrarConfirmacionEliminar(ticket),
                   ),
