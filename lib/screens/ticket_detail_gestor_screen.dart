@@ -4,6 +4,8 @@ import 'dart:convert';
 
 import '../services/auth_service.dart';
 
+const Color naranja = Color(0xFFFF6F00);
+
 class TicketDetailGestorScreen extends StatefulWidget {
   final Map<String, dynamic> ticket;
 
@@ -45,16 +47,21 @@ class _TicketDetailGestorScreenState extends State<TicketDetailGestorScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Nuevo Comentario'),
+        backgroundColor: const Color(0xFF2C2C2C),
+        title: const Text('Nuevo Comentario', style: TextStyle(color: Colors.white)),
         content: TextField(
           controller: _comentarioController,
-          decoration: const InputDecoration(hintText: 'Escribe tu comentario'),
+          style: const TextStyle(color: Colors.white),
+          decoration: const InputDecoration(
+            hintText: 'Escribe tu comentario',
+            hintStyle: TextStyle(color: Colors.white38),
+          ),
           maxLines: 4,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancelar'),
+            child: const Text('Cancelar', style: TextStyle(color: naranja)),
           ),
           TextButton(
             onPressed: () async {
@@ -88,7 +95,7 @@ class _TicketDetailGestorScreenState extends State<TicketDetailGestorScreen> {
                 );
               }
             },
-            child: const Text('Enviar'),
+            child: const Text('Enviar', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -98,12 +105,17 @@ class _TicketDetailGestorScreenState extends State<TicketDetailGestorScreen> {
   Widget _detalle(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('$label: ', style: const TextStyle(fontWeight: FontWeight.bold)),
-          Expanded(child: Text(value)),
-        ],
+      child: RichText(
+        text: TextSpan(
+          text: '$label: ',
+          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          children: [
+            TextSpan(
+              text: value,
+              style: const TextStyle(fontWeight: FontWeight.normal),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -112,7 +124,7 @@ class _TicketDetailGestorScreenState extends State<TicketDetailGestorScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Comentarios:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const Text('Comentarios:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
         const SizedBox(height: 8),
         ..._comentarios.map((c) {
           final contenido = c['contenido'];
@@ -123,20 +135,19 @@ class _TicketDetailGestorScreenState extends State<TicketDetailGestorScreen> {
               ? '${fecha.day}/${fecha.month}/${fecha.year} ${fecha.hour}:${fecha.minute.toString().padLeft(2, '0')}'
               : 'Fecha desconocida';
 
-          final esGestor = autor == AuthService.token;
-
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 6.0),
             child: Text.rich(
               TextSpan(
                 text: '- $contenido\n',
+                style: const TextStyle(color: Colors.white),
                 children: [
                   TextSpan(
                     text: 'por $autor el $fechaFormateada',
-                    style: TextStyle(
-                      fontWeight: esGestor ? FontWeight.bold : FontWeight.normal,
+                    style: const TextStyle(
                       fontStyle: FontStyle.italic,
                       fontSize: 12,
+                      color: Colors.white60,
                     ),
                   ),
                 ],
@@ -150,19 +161,20 @@ class _TicketDetailGestorScreenState extends State<TicketDetailGestorScreen> {
 
   Widget _buildComentarios() {
     if (_loadingComentarios) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator(color: naranja));
     }
 
     if (_comentarios.isEmpty) {
-      return const Text('No hay comentarios aún.');
+      return const Text('No hay comentarios aún.', style: TextStyle(color: Colors.white70));
     }
 
-    return SizedBox(
-      height: 250,
-      child: Scrollbar(
-        thumbVisibility: true,
-        child: SingleChildScrollView(child: _comentariosContenido()),
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.black26,
+        borderRadius: BorderRadius.circular(12),
       ),
+      child: SingleChildScrollView(child: _comentariosContenido()),
     );
   }
 
@@ -171,7 +183,11 @@ class _TicketDetailGestorScreenState extends State<TicketDetailGestorScreen> {
     final ticket = widget.ticket;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Detalle del Ticket')),
+      backgroundColor: const Color(0xFF1E1E1E),
+      appBar: AppBar(
+        title: const Text('Detalle del Ticket'),
+        backgroundColor: Colors.black,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
@@ -182,11 +198,17 @@ class _TicketDetailGestorScreenState extends State<TicketDetailGestorScreen> {
             _detalle('Categoría', ticket['categoria']),
             _detalle('Estado', ticket['estado']),
             _detalle('Prioridad', ticket['prioridad'] ?? 'No asignada'),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
             ElevatedButton.icon(
               icon: const Icon(Icons.comment),
               label: const Text('Añadir Comentario'),
               onPressed: () => _agregarComentario(context),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: naranja,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+              ),
             ),
             const SizedBox(height: 24),
             _buildComentarios(),
